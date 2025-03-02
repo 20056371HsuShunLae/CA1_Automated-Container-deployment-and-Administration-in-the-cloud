@@ -56,7 +56,10 @@ Terraform must have the necessary AWS provider plugin set up to link with AWS.
 ![image](https://github.com/user-attachments/assets/1d5d5846-8f89-4196-91a3-348d24c63a4b)
 
 
-The script will work by integrating four configrued Modules.
+The script begins by authenticating the AWS account, then proceeds to integrate four configured modules.
+
+![image](https://github.com/user-attachments/assets/07f80962-690c-4497-b427-1dcbd1aac439)
+
 
 ### Module
 
@@ -113,13 +116,16 @@ In case, if you want to destroy after creation
 ```
 terraform destroy -auto-approve
 ```
+
 ## Outputs
 
 After applying the Terraform configuration, the EC2 instance's Public IP will be printed.
 
 ![image](https://github.com/user-attachments/assets/2178cad4-31ee-43ab-966f-b9c9ebb53316)
 
+## Precaution
 
+You need to change your AWS account's credentials (access_key and secret_key) before using this script.
 
 ## Author
 
