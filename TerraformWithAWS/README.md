@@ -101,12 +101,12 @@ terraform init
 
 Plan the infrastructure
 ```
-terraform plan
+terraform plan -auto-approve
 ```
 
 Apply the Terraform configuration
 ```
-terraform apply
+terraform apply -auto-approve
 ```
 
 In case, if you want to destroy after creation
