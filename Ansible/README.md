@@ -64,14 +64,22 @@ Run Ansible Command
 ```
 ansible-playbook -i hosts docker_install.yml
 ```
+## Output
+
+Docker on EC2 instance
+
+![image](https://github.com/user-attachments/assets/69b4b08e-d1ab-46fd-b415-447481cbc3ac)
 
 ## Reference
 
 
 ## Precaution
 
-In hosts file, it must be configured your ec2's ssh credentials, user and public ip.
+In hosts file, it must be configured your ec2's ssh credentials, user and public ip before running Ansible Playbook.
 
 ## Author
 
+Hsu Shun Lae
+
+Github : https://github.com/20056371HsuShunLae
 
