@@ -35,11 +35,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Download Docker image artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: webapp-tar
-
     - name: Set up SSH connection
       uses: appleboy/ssh-action@v0.1.5
       with:
@@ -50,7 +45,7 @@ jobs:
 
     - name: Load Docker image on EC2
       run: |
-        docker load -i webapp.tar
+        docker pull ${{ secrets.DOCKER_USERNAME }}/app:latest
     
     - name: Deploy container on EC2
       run: |
