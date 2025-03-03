@@ -24,8 +24,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/app:latest Ansible/Docker_App_Ansible/
-        docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/app:my-web-app Ansible/Docker_App_Ansible/
+        docker push ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
 
   deploy:
     runs-on: ubuntu-latest
