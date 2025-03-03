@@ -49,6 +49,8 @@ Operating System: Ubuntu 20.04 / 22.04 (or any Linux distribution)
 
 <<<<<In my case, I am using WSL (Windows Subsystem for Linux)>>>>>
 
+SSH access to the target machine
+
 Python Version: Python 3.12+
 
 Ansible Version: Ansible 2.16.3+
