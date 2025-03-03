@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - main  # Trigger on push to main branch
+
+pool:
+  name: 'Azure Pipelines'  # Use the default Azure-hosted agent pool
+  vmImage: 'ubuntu-latest'  # Specify the hosted Ubuntu image
+
+variables:
+  MY_DOCKER_IMAGE: 'simple-web-app'  # My app name
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildingDockerFileAndPushToPipelineWorkSpace
+    steps:
+    - task: Docker@2
+      inputs:
+        command: 'build'
+        dockerfile: '**/dockerfile'
+        repository: $(MY_DOCKER_IMAGE)
+        tags: web_app
+
+    - script: |
+        docker save -o $(Pipeline.Workspace)/webapp.tar $(MY_DOCKER_IMAGE):web_app
+      displayName: 'Save Docker image to tar'
+
+- stage: Deploy
+  jobs:
+  - job: DeployToEC2
+    steps:
+    - task: Docker@2
+      inputs:
+        command: 'login'
+        containerRegistry: 'MyEC2SSHConnection'  # Specify your container registry
+
+    - task: Docker@2
+      inputs:
+        command: 'load'
+        containerRegistry: 'MyEC2SSHConnection'
+        imageFile: $(Pipeline.Workspace)/webapp.tar
+
+    - task: Docker@2
+      inputs:
+        command: 'run'
+        containerRegistry: 'MyEC2SSHConnection'
+        imageName: $(MY_DOCKER_IMAGE):web_app
+        containerName: 'my-web-app'
+        ports: '80:80'
+        detach: true
+        restartPolicy: 'always'
+
+    - task: SSH@0
+      inputs:
+        sshEndpoint: 'MyEC2SSHConnection'
+        runOptions: 'inline'
+        inline: |
+          docker stop my-web-app || true
+          docker rm my-web-app || true
+          docker run -d -p 80:80 --name my-web-app $(MY_DOCKER_IMAGE):web_app
+        continueOnError: true
