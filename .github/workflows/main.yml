@@ -35,19 +35,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up SSH connection
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_PRIVATE_KEY }}
-        port: 22
-
-    - name: Load Docker image on EC2
+    - name: Set up SSH and deploy to EC2
       run: |
-        docker pull ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
-    
-    - name: Deploy Docker image to EC2
-      run: |
-        docker run -d -p 80:80 --name my-web-app ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            docker stop my-web-app || true
+            docker rm my-web-app || true
+            docker run -d -p 80:80 --name my-web-app ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
+          EOF
+        
         
