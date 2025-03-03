@@ -51,5 +51,6 @@ jobs:
       run: |
         docker stop my-web-app || true
         docker rm my-web-app || true
+        set +e
         docker run -d -p 80:80 --name my-web-app simple-web-app:latest
-      continueOnError: true
+        
