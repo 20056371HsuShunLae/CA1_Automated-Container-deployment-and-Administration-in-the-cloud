@@ -45,12 +45,12 @@ jobs:
 
     - name: Load Docker image on EC2
       run: |
-        docker pull ${{ secrets.DOCKER_USERNAME }}/app:latest
+        docker pull ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
     
     - name: Deploy Docker image to EC2
       run: |
         docker stop my-web-app || true
         docker rm my-web-app || true
         set +e
-        docker run -d -p 80:80 --name my-web-app simple-web-app:latest
+        docker run -d -p 80:80 --name my-web-app ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
         
