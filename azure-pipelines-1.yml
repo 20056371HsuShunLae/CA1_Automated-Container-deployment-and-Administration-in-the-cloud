@@ -1,7 +1,7 @@
-trigger:
-  branches:
-    include:
-      - main  # Trigger on push to main branch
+# trigger:
+#   branches:
+#     include:
+#       - main  # Trigger on push to main branch
 
 pool:
   name: 'Azure Pipelines'  # Use the default Azure-hosted agent pool
