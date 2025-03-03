@@ -16,13 +16,9 @@ The pipeline is triggered whenever code is pushed to GitHub. It consists of two 
 
 #### Building the Docker Image
 
-The pipeline uses Docker Buildx, an advanced builder for Docker images that supports multi-platform builds, caching, and improved performance over the traditional `docker build` command.
-
-A pre-configured Dockerfile is used to build the image.
-
 The pipeline logs into Docker Hub, a cloud-based container registry.
 
-The built image is then pushed to Docker Hub.
+A pre-configured Dockerfile is used to build the image. The built image is then pushed to Docker Hub.
 
 Configured Dockerfile will be built into the Docker Hub after logging in to the docker hub which is a cloud-based container registry.
 
