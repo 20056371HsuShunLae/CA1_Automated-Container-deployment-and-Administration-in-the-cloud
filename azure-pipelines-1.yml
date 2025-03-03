@@ -30,33 +30,18 @@ stages:
   jobs:
   - job: DeployToEC2
     steps:
-    - task: Docker@2
-      inputs:
-        command: 'login'
-        containerRegistry: 'MyEC2SSHConnection'  # Specify your container registry
-
-    - task: Docker@2
-      inputs:
-        command: 'load'
-        containerRegistry: 'MyEC2SSHConnection'
-        imageFile: $(Pipeline.Workspace)/webapp.tar
-
-    - task: Docker@2
-      inputs:
-        command: 'run'
-        containerRegistry: 'MyEC2SSHConnection'
-        imageName: $(MY_DOCKER_IMAGE):web_app
-        containerName: 'my-web-app'
-        ports: '80:80'
-        detach: true
-        restartPolicy: 'always'
-
     - task: SSH@0
       inputs:
-        sshEndpoint: 'MyEC2SSHConnection'
+        sshEndpoint: 'MyEC2SSHConnection'  # SSH service connection to your EC2 instance
         runOptions: 'inline'
         inline: |
+          # Load the Docker image
+          docker load -i $(Pipeline.Workspace)/webapp.tar
+
+          # Stop and remove any existing container with the same name
           docker stop my-web-app || true
           docker rm my-web-app || true
+
+          # Run the new container
           docker run -d -p 80:80 --name my-web-app $(MY_DOCKER_IMAGE):web_app
         continueOnError: true
