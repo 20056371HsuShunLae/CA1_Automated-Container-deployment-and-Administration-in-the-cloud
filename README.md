@@ -1,30 +1,14 @@
-# CI/CD Pipeline for Automated Docker Build and Deployment to AWS EC2 Using Azure DevOps
+# CI/CD Pipeline for Automated Docker Build and Deployment to AWS EC2 Using Git Action
 
-This document outlines how Azure DevOps CI/CD Pipeline will automatically build and deploy Docker image on AWS EC2 whenver code is pushed from GitHub.
+This document outlines how Git Action CI/CD Pipeline will automatically build and deploy Docker image on AWS EC2 whenver code is pushed from GitHub.
 
 ## Workflow
 
-### Agent Setup on EC2
+### Preconfiguration
 
-To use a self-hosted agent, first create an agent pool in Azure DevOps. Then, create a new agent within that pool. The EC2 instance must download the configuration file and run it to register as a new agent.
+Before running the pipeline, all necessary variables for logging into Docker Hub and accessing EC2 via SSH must be configured and stored as repository secrets.
 
-![image](https://github.com/user-attachments/assets/e372e751-c838-4bf3-a9eb-b1e55131c161)
-
-During the registration process, the created pool name is configured. The server URL is then connected, followed by authentication using a Personal Access Token (PAT). A new token must be created with the appropriate permissions. Once authenticated, the EC2 agent is registered in the pool.
-
-![image](https://github.com/user-attachments/assets/823c9b67-ea00-44b3-8598-301a70b2b762)
-
-Make sure to install and start the agent service on EC2 to be active agent in Azure DevOps.
-
-![image](https://github.com/user-attachments/assets/36bfb1ca-eb8d-4bb5-8f4a-b06b3838a545)
-
-
-### SSH EC2 connection setup
-
-Before running the pipeline, configure the EC2 SSH credentials, including the username and public IP, under the service connection settings in Azure DevOps.
-
-![image](https://github.com/user-attachments/assets/c544d37a-0ab2-45f4-b027-e28c522d05dd)
-
+![image](https://github.com/user-attachments/assets/bd5043e4-b475-43cd-a131-aa6b5738fdc9)
 
 ### Pipeline Workflow
 
@@ -32,19 +16,25 @@ The pipeline is triggered whenever code is pushed to GitHub. It consists of two 
 
 #### Building the Docker Image
 
-The Docker image is built using the `docker build` command.
+The pipeline uses Docker Buildx, an advanced builder for Docker images that supports multi-platform builds, caching, and improved performance over the traditional `docker build` command.
 
-Configured Dockerfile in the target EC2 instance will be built.
+A pre-configured Dockerfile is used to build the image.
 
-The built image is saved in the working directory of the target EC2 instance.
+The pipeline logs into Docker Hub, a cloud-based container registry.
+
+The built image is then pushed to Docker Hub.
+
+Configured Dockerfile will be built into the Docker Hub after logging in to the docker hub which is a cloud-based container registry.
+
+The built image is then saved in that docker hub by pushing it to that.
 
 #### Deploying the Docker Image
 
 The pipeline establishes an SSH connection to the EC2 instance using the pre-configured SSH credentials.
 
-Before Deployment starts, it first removes any docker image which is same as the one about to deploy.
+Before deploying, it first removes any existing Docker containers with the same name to avoid conflicts.
 
-The deployment step runs `docker run `commands to start the container on the EC2 instance.
+The deployment step runs `docker run` commands to start the container on the EC2 instance.
 
 ## Architecture Diagram
 
@@ -52,15 +42,12 @@ Usage
 
 Simply push or commit code to GitHub to trigger the pipeline.
 
-Alternatively, manually trigger the pipeline from Azure DevOps.
+Alternatively, manually trigger the pipeline from Git Action.
 
-![image](https://github.com/user-attachments/assets/8bf8f335-03a0-433c-bc17-bfca9f75578a)
+![image](https://github.com/user-attachments/assets/8569ed49-8365-4aad-bab9-1308bbccd1c2)
+
 
 ## Requirement
-
-AWS EC2 instance with the Azure DevOps Agent installed and registered.
-
-AWS EC2 instance with Git installed.
 
 AWS EC2 instance with Docker installed.
 
