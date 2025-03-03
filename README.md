@@ -68,6 +68,8 @@ A valid Dockerfile in the repository.
 
 SSH connection to the target AWS EC2 instance configured under Azure DevOps service connections.
 
+AWS EC2 instance's security group must allow port 22 (SSH) and port 80 (HTTP).
+
 ## Precaution
 
 Ensure the target EC2 instance is up and running with all required configurations installed.
