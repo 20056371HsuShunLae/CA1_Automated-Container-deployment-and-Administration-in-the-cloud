@@ -47,8 +47,9 @@ jobs:
       run: |
         docker pull ${{ secrets.DOCKER_USERNAME }}/app:latest
     
-    - name: Deploy container on EC2
+    - name: Deploy Docker image to EC2
       run: |
         docker stop my-web-app || true
         docker rm my-web-app || true
         docker run -d -p 80:80 --name my-web-app simple-web-app:latest
+      continueOnError: true
