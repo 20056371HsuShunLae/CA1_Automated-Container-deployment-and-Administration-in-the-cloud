@@ -49,7 +49,5 @@ jobs:
     
     - name: Deploy Docker image to EC2
       run: |
-        docker stop my-web-app || true && \
-        docker rm my-web-app || true && \
         docker run -d -p 80:80 --name my-web-app ${{ secrets.DOCKER_USERNAME }}/app:my-web-app
         
